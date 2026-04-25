@@ -36,19 +36,20 @@
     .msg{font-size:13px;margin-top:10px;color:#e53e3e}
     .msg.success{color:#38a169}
     .doc-link{font-size:12px;color:#1a6dff;text-decoration:none}
-    .hidden{display:none}
     .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
     .stat{background:#fff;border-radius:12px;padding:16px;text-align:center;border:1px solid #e5e7eb}
     .stat-num{font-size:28px;font-weight:700;color:#1a6dff}
     .stat-label{font-size:12px;color:#888;margin-top:4px}
-    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+    #loginPage{position:fixed;top:0;left:0;right:0;bottom:0;background:#f5f6fa;display:flex;align-items:center;justify-content:center;z-index:999}
+    #mainPage{display:none}
     .login-card{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:360px;box-shadow:0 2px 16px rgba(0,0,0,0.08)}
     .login-logo{font-size:20px;font-weight:700;color:#1a6dff;text-align:center;margin-bottom:24px}
+    #tab-jobReg,#tab-jobList,#tab-driverList{display:none}
   </style>
 </head>
 <body>
 
-<div id="loginWrap" class="login-wrap" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#f5f6fa;z-index:999">
+<div id="loginPage">
   <div class="login-card">
     <div class="login-logo">SMART SKY 관리자</div>
     <label>아이디</label>
@@ -60,7 +61,7 @@
   </div>
 </div>
 
-<div id="mainWrap" class="hidden">
+<div id="mainPage">
   <div class="topbar">
     <div class="logo">SMART SKY 관리자</div>
     <span class="logout" onclick="adminLogout()">로그아웃</span>
@@ -78,7 +79,7 @@
         <div class="stat"><div class="stat-num" id="statDrivers">-</div><div class="stat-label">승인 대기 기사</div></div>
       </div>
     </div>
-    <div id="tab-jobReg" class="hidden">
+    <div id="tab-jobReg">
       <div class="card">
         <div class="card-title">새 일감 등록</div>
         <label>날짜</label><input type="date" id="jobDate">
@@ -92,8 +93,8 @@
         <div id="jobMsg" class="msg"></div>
       </div>
     </div>
-    <div id="tab-jobList" class="hidden"><div id="jobCards"></div></div>
-    <div id="tab-driverList" class="hidden"><div id="driverCards"></div></div>
+    <div id="tab-jobList"><div id="jobCards"></div></div>
+    <div id="tab-driverList"><div id="driverCards"></div></div>
   </div>
 </div>
 
@@ -106,30 +107,28 @@ const sb = createClient(
 )
 
 function showMain() {
-  document.getElementById('loginWrap').classList.add('hidden')
-  document.getElementById('mainWrap').classList.remove('hidden')
+  document.getElementById('loginPage').style.display = 'none'
+  document.getElementById('mainPage').style.display = 'block'
   loadDashboard()
 }
-
-if (false) showMain()
 
 window.adminLogin = async () => {
   const id = document.getElementById('adminId').value.trim()
   const pw = document.getElementById('adminPw').value
   const msg = document.getElementById('loginMsg')
   msg.textContent = ''
+  if (!id || !pw) { msg.textContent = '아이디와 비밀번호를 입력해주세요.'; return }
   const { data, error } = await sb.from('admins').select('*').eq('username', id).eq('password_hash', pw).maybeSingle()
   if (!data) { msg.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.'; return }
-  localStorage.setItem('smartsky_admin', JSON.stringify(data))
   showMain()
 }
 
-window.adminLogout = () => { localStorage.removeItem('smartsky_admin'); location.reload() }
+window.adminLogout = () => { location.reload() }
 
 window.showTab = (tab, el) => {
-  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'))
+  document.querySelectorAll('#tab-dashboard,#tab-jobReg,#tab-jobList,#tab-driverList').forEach(t => t.style.display = 'none')
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
-  document.getElementById('tab-' + tab).classList.remove('hidden')
+  document.getElementById('tab-' + tab).style.display = 'block'
   el.classList.add('active')
   if (tab === 'jobList') loadJobs()
   if (tab === 'driverList') loadDrivers()
@@ -185,14 +184,14 @@ async function loadJobs() {
           <button class="btn btn-danger btn-sm" onclick="closeJob('${j.id}', this)">${j.status === 'open' ? '마감' : '재오픈'}</button>
         </div>
       </div>
-      <div id="apps-${j.id}" class="hidden" style="margin-top:12px;border-top:1px solid #e5e7eb;padding-top:12px"></div>
+      <div id="apps-${j.id}" style="display:none;margin-top:12px;border-top:1px solid #e5e7eb;padding-top:12px"></div>
     </div>`).join('')
 }
 
 window.viewApps = async (jobId) => {
   const el = document.getElementById('apps-' + jobId)
-  el.classList.toggle('hidden')
-  if (!el.classList.contains('hidden') && !el.dataset.loaded) {
+  el.style.display = el.style.display === 'none' ? 'block' : 'none'
+  if (el.style.display === 'block' && !el.dataset.loaded) {
     const { data } = await sb.from('applications').select('*, drivers(name, phone, equipment_type)').eq('job_id', jobId)
     el.dataset.loaded = '1'
     if (!data?.length) { el.innerHTML = '<div style="font-size:13px;color:#888">신청자 없음</div>'; return }
