@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일감 목록 — SMART SKY</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; min-height: 100vh; padding-bottom: 80px; }
+    .topbar { background: #fff; padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; }
+    .logo { font-size: 18px; font-weight: 700; color: #1a6dff; }
+    .user-name { font-size: 13px; color: #555; }
+    .logout { font-size: 12px; color: #888; cursor: pointer; }
+    .content { padding: 16px; }
+    .filter-row { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .filter-btn { padding: 6px 14px; border-radius: 99px; border: 1px solid #e5e7eb; background: #fff; font-size: 13px; color: #555; cursor: pointer; white-space: nowrap; transition: all .15s; }
+    .filter-btn.active { background: #1a6dff; color: #fff; border-color: #1a6dff; }
+    .job-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid #e5e7eb; cursor: pointer; transition: box-shadow .15s; }
+    .job-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .job-title { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }
+    .job-meta { font-size: 13px; color: #888; margin-bottom: 10px; }
+    .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tag { font-size: 11px; padding: 3px 8px; border-radius: 99px; }
+    .tag-blue { background: #eff6ff; color: #1a6dff; }
+    .tag-green { background: #ecfdf5; color: #059669; }
+    .tag-amber { background: #fff7e6; color: #d97706; }
+    .job-footer { display: flex; align-items: center; justify-content: space-between; }
+    .amount { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+    .fee { font-size: 12px; color: #e53e3e; }
+    .apply-btn { padding: 8px 18px; border-radius: 8px; border: none; background: #1a6dff; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .apply-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .apply-btn.done { background: #ecfdf5; color: #059669; border: 1px solid #059669; }
+    .empty { text-align: center; color: #888; padding: 60px 0; font-size: 14px; }
+    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e7eb; display: flex; }
+    .nav-item { flex: 1; padding: 14px; text-align: center; font-size: 12px; color: #888; cursor: pointer; text-decoration: none; }
+    .nav-item.active { color: #1a6dff; font-weight: 600; }
+    .loading { text-align: center; padding: 40px; color: #888; }
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">SMART SKY</div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="user-name" id="userName"></span>
+    <span class="logout" onclick="logout()">로그아웃</span>
+  </div>
+</div>
+
+<div class="content">
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterJobs('전체', this)">전체</button>
+    <button class="filter-btn" onclick="filterJobs('스카이차', this)">스카이차</button>
+    <button class="filter-btn" onclick="filterJobs('사다리차', this)">사다리차</button>
+  </div>
+  <div id="jobList"><div class="loading">불러오는 중...</div></div>
+</div>
+
+<nav class="nav">
+  <a class="nav-item active" href="./jobs.html">일감</a>
+  <a class="nav-item" href="./mypage.html">내 신청</a>
+</nav>
+
+<script type="module">
+  import { supabase, session } from './config.js'
+
+  const driver = session.get('driver')
+  if (!driver) { location.href = './index.html' }
+  document.getElementById('userName').textContent = driver?.name + '님'
+
+  let allJobs = []
+  let myApps = []
+
+  window.logout = () => { session.clear('driver'); location.href = './index.html' }
+
+  async function load() {
+    const [{ data: jobs }, { data: apps }] = await Promise.all([
+      supabase.from('jobs').select('*').eq('status', 'open').order('work_date'),
+      supabase.from('applications').select('job_id').eq('driver_id', driver.id)
+    ])
+    allJobs = jobs || []
+    myApps = (apps || []).map(a => a.job_id)
+    renderJobs(allJobs)
+  }
+
+  window.filterJobs = (type, btn) => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    const filtered = type === '전체' ? allJobs : allJobs.filter(j => j.equipment_type === type)
+    renderJobs(filtered)
+  }
+
+  function renderJobs(jobs) {
+    const el = document.getElementById('jobList')
+    if (!jobs.length) { el.innerHTML = '<div class="empty">등록된 일감이 없습니다.</div>'; return }
+    el.innerHTML = jobs.map(j => {
+      const applied = myApps.includes(j.id)
+      return `
+        <div class="job-card">
+          <div class="job-title">${j.equipment_type} — ${j.region}</div>
+          <div class="job-meta">${j.work_date} · ${j.description || ''}</div>
+          <div class="tag-row">
+            <span class="tag tag-blue">${j.equipment_type}</span>
+            <span class="tag tag-amber">${j.region}</span>
+          </div>
+          <div class="job-footer">
+            <div>
+              <div class="amount">${j.amount.toLocaleString()}원</div>
+              <div class="fee">수수료 ${j.fee.toLocaleString()}원</div>
+            </div>
+            <button class="apply-btn ${applied ? 'done' : ''}"
+              ${applied ? 'disabled' : ''}
+              onclick="apply('${j.id}', this)">
+              ${applied ? '신청완료' : '신청하기'}
+            </button>
+          </div>
+        </div>`
+    }).join('')
+  }
+
+  window.apply = async (jobId, btn) => {
+    btn.disabled = true
+    btn.textContent = '신청 중...'
+    const { error } = await supabase.from('applications').insert({
+      job_id: jobId,
+      driver_id: driver.id
+    })
+    if (error) {
+      btn.disabled = false
+      btn.textContent = '신청하기'
+      alert('신청 중 오류가 발생했습니다.')
+      return
+    }
+    myApps.push(jobId)
+    btn.textContent = '신청완료'
+    btn.className = 'apply-btn done'
+  }
+
+  load()
+</script>
+</body>
+</html>

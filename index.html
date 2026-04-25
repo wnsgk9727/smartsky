@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART SKY</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card { background: #fff; border-radius: 16px; padding: 2rem; width: 100%; max-width: 400px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+    .logo { font-size: 22px; font-weight: 700; color: #1a6dff; text-align: center; margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: #888; text-align: center; margin-bottom: 28px; }
+    .tab-row { display: flex; border-radius: 10px; overflow: hidden; border: 1px solid #e5e7eb; margin-bottom: 24px; }
+    .tab { flex: 1; padding: 10px; font-size: 14px; font-weight: 500; text-align: center; cursor: pointer; background: #fff; color: #888; border: none; transition: all .15s; }
+    .tab.active { background: #1a6dff; color: #fff; }
+    label { font-size: 13px; color: #555; display: block; margin-bottom: 4px; margin-top: 14px; }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; outline: none; transition: border .15s; }
+    input:focus, select:focus { border-color: #1a6dff; }
+    .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #1a6dff; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background .15s; }
+    .btn:hover { background: #0056e0; }
+    .btn.secondary { background: #f0f4ff; color: #1a6dff; margin-top: 10px; }
+    .msg { font-size: 13px; text-align: center; margin-top: 12px; color: #e53e3e; }
+    .msg.success { color: #38a169; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">SMART SKY</div>
+  <div class="subtitle">건설 장비 매칭 플랫폼</div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="switchTab('login')">로그인</button>
+    <button class="tab" onclick="switchTab('register')">회원가입</button>
+  </div>
+
+  <!-- 로그인 폼 -->
+  <div id="loginForm">
+    <label>휴대폰 번호</label>
+    <input type="tel" id="loginPhone" placeholder="010-0000-0000">
+    <label>비밀번호</label>
+    <input type="password" id="loginPw" placeholder="비밀번호 입력">
+    <button class="btn" onclick="login()">로그인</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <!-- 회원가입 폼 -->
+  <div id="registerForm" class="hidden">
+    <label>이름</label>
+    <input type="text" id="regName" placeholder="실명 입력">
+    <label>휴대폰 번호</label>
+    <input type="tel" id="regPhone" placeholder="010-0000-0000">
+    <label>비밀번호</label>
+    <input type="password" id="regPw" placeholder="8자 이상">
+    <label>장비 종류</label>
+    <select id="regEquip">
+      <option value="">선택하세요</option>
+      <option value="스카이차">스카이차</option>
+      <option value="사다리차">사다리차</option>
+    </select>
+    <button class="btn" onclick="register()">회원가입</button>
+    <div id="registerMsg" class="msg"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { supabase, session } from './config.js'
+
+  // 이미 로그인된 경우 이동
+  const driver = session.get('driver')
+  if (driver) location.href = './jobs.html'
+
+  window.switchTab = (tab) => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+    event.target.classList.add('active')
+    document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login')
+    document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register')
+  }
+
+  window.login = async () => {
+    const phone = document.getElementById('loginPhone').value.trim()
+    const pw    = document.getElementById('loginPw').value
+    const msg   = document.getElementById('loginMsg')
+    msg.textContent = ''
+
+    if (!phone || !pw) { msg.textContent = '모든 항목을 입력해주세요.'; return }
+
+    const { data, error } = await supabase
+      .from('drivers')
+      .select('*')
+      .eq('phone', phone)
+      .eq('password_hash', pw)
+      .single()
+
+    if (error || !data) { msg.textContent = '전화번호 또는 비밀번호가 올바르지 않습니다.'; return }
+    if (data.status === 'pending') { msg.textContent = '서류 검토 중입니다. 승인 후 이용 가능합니다.'; return }
+    if (data.status === 'rejected') { msg.textContent = '가입이 거절되었습니다. 담당자에게 문의하세요.'; return }
+
+    session.set('driver', data)
+    location.href = './jobs.html'
+  }
+
+  window.register = async () => {
+    const name  = document.getElementById('regName').value.trim()
+    const phone = document.getElementById('regPhone').value.trim()
+    const pw    = document.getElementById('regPw').value
+    const equip = document.getElementById('regEquip').value
+    const msg   = document.getElementById('registerMsg')
+    msg.textContent = ''
+
+    if (!name || !phone || !pw || !equip) { msg.textContent = '모든 항목을 입력해주세요.'; return }
+    if (pw.length < 8) { msg.textContent = '비밀번호는 8자 이상이어야 합니다.'; return }
+
+    const { data, error } = await supabase
+      .from('drivers')
+      .insert({ name, phone, password_hash: pw, equipment_type: equip })
+      .select()
+      .single()
+
+    if (error) {
+      msg.textContent = error.code === '23505' ? '이미 가입된 전화번호입니다.' : '가입 중 오류가 발생했습니다.'
+      return
+    }
+
+    session.set('driver', data)
+    msg.className = 'msg success'
+    msg.textContent = '가입 완료! 서류를 제출해주세요.'
+    setTimeout(() => location.href = './docs.html', 1200)
+  }
+</script>
+</body>
+</html>
