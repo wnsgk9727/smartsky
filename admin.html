@@ -5,52 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관리자 — SMART SKY</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; }
-    .topbar { background: #1a1a2e; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-size: 18px; font-weight: 700; color: #fff; }
-    .logout { font-size: 12px; color: #94a3b8; cursor: pointer; }
-    .tab-row { display: flex; background: #fff; border-bottom: 1px solid #e5e7eb; }
-    .tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; }
-    .tab.active { color: #1a6dff; font-weight: 600; border-bottom-color: #1a6dff; }
-    .content { padding: 16px; }
-    .card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
-    .card-title { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }
-    .card-sub { font-size: 13px; color: #888; margin-bottom: 10px; }
-    label { font-size: 13px; color: #555; display: block; margin-bottom: 4px; margin-top: 12px; }
-    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; outline: none; }
-    input:focus, select:focus, textarea:focus { border-color: #1a6dff; }
-    textarea { resize: vertical; min-height: 80px; }
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; }
-    .btn-primary { background: #1a6dff; color: #fff; }
-    .btn-success { background: #ecfdf5; color: #059669; border: 1px solid #059669; }
-    .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #dc2626; }
-    .btn-sm { padding: 6px 12px; font-size: 12px; }
-    .badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; }
-    .badge-pending { background: #fff7e6; color: #d97706; }
-    .badge-approved { background: #ecfdf5; color: #059669; }
-    .badge-rejected { background: #fef2f2; color: #dc2626; }
-    .badge-open { background: #eff6ff; color: #1a6dff; }
-    .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-    .btn-row { display: flex; gap: 6px; }
-    .msg { font-size: 13px; margin-top: 10px; color: #e53e3e; }
-    .msg.success { color: #38a169; }
-    .doc-link { font-size: 12px; color: #1a6dff; text-decoration: none; }
-    .hidden { display: none; }
-    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .stat { background: #fff; border-radius: 12px; padding: 16px; text-align: center; border: 1px solid #e5e7eb; }
-    .stat-num { font-size: 28px; font-weight: 700; color: #1a6dff; }
-    .stat-label { font-size: 12px; color: #888; margin-top: 4px; }
-
-    /* 로그인 */
-    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-card { background: #fff; border-radius: 16px; padding: 2rem; width: 100%; max-width: 360px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
-    .login-logo { font-size: 20px; font-weight: 700; color: #1a6dff; text-align: center; margin-bottom: 24px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:sans-serif;background:#f5f6fa}
+    .topbar{background:#1a1a2e;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:18px;font-weight:700;color:#fff}
+    .logout{font-size:12px;color:#94a3b8;cursor:pointer}
+    .tab-row{display:flex;background:#fff;border-bottom:1px solid #e5e7eb}
+    .tab{flex:1;padding:14px;text-align:center;font-size:14px;color:#888;cursor:pointer;border-bottom:2px solid transparent}
+    .tab.active{color:#1a6dff;font-weight:600;border-bottom-color:#1a6dff}
+    .content{padding:16px}
+    .card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #e5e7eb}
+    .card-title{font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:4px}
+    .card-sub{font-size:13px;color:#888;margin-bottom:10px}
+    label{font-size:13px;color:#555;display:block;margin-bottom:4px;margin-top:12px}
+    input,select,textarea{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#1a6dff}
+    textarea{resize:vertical;min-height:80px}
+    .btn{padding:10px 18px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer}
+    .btn-primary{background:#1a6dff;color:#fff;width:100%;margin-top:16px}
+    .btn-success{background:#ecfdf5;color:#059669;border:1px solid #059669}
+    .btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #dc2626}
+    .btn-sm{padding:6px 12px;font-size:12px}
+    .badge{font-size:11px;padding:2px 8px;border-radius:99px}
+    .badge-pending{background:#fff7e6;color:#d97706}
+    .badge-approved{background:#ecfdf5;color:#059669}
+    .badge-rejected{background:#fef2f2;color:#dc2626}
+    .badge-open{background:#eff6ff;color:#1a6dff}
+    .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .btn-row{display:flex;gap:6px}
+    .msg{font-size:13px;margin-top:10px;color:#e53e3e}
+    .msg.success{color:#38a169}
+    .doc-link{font-size:12px;color:#1a6dff;text-decoration:none}
+    .hidden{display:none}
+    .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+    .stat{background:#fff;border-radius:12px;padding:16px;text-align:center;border:1px solid #e5e7eb}
+    .stat-num{font-size:28px;font-weight:700;color:#1a6dff}
+    .stat-label{font-size:12px;color:#888;margin-top:4px}
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .login-card{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:360px;box-shadow:0 2px 16px rgba(0,0,0,0.08)}
+    .login-logo{font-size:20px;font-weight:700;color:#1a6dff;text-align:center;margin-bottom:24px}
   </style>
 </head>
 <body>
 
-<!-- 로그인 화면 -->
 <div id="loginWrap" class="login-wrap">
   <div class="login-card">
     <div class="login-logo">SMART SKY 관리자</div>
@@ -58,250 +55,220 @@
     <input type="text" id="adminId" placeholder="admin">
     <label>비밀번호</label>
     <input type="password" id="adminPw" placeholder="비밀번호">
-    <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="adminLogin()">로그인</button>
+    <button class="btn btn-primary" onclick="adminLogin()">로그인</button>
     <div id="loginMsg" class="msg"></div>
   </div>
 </div>
 
-<!-- 메인 화면 -->
 <div id="mainWrap" class="hidden">
   <div class="topbar">
     <div class="logo">SMART SKY 관리자</div>
     <span class="logout" onclick="adminLogout()">로그아웃</span>
   </div>
-
   <div class="tab-row">
-    <div class="tab active" onclick="showTab('dashboard', this)">대시보드</div>
-    <div class="tab" onclick="showTab('jobReg', this)">일감 등록</div>
-    <div class="tab" onclick="showTab('jobList', this)">일감 관리</div>
-    <div class="tab" onclick="showTab('driverList', this)">기사 승인</div>
+    <div class="tab active" onclick="showTab('dashboard',this)">대시보드</div>
+    <div class="tab" onclick="showTab('jobReg',this)">일감 등록</div>
+    <div class="tab" onclick="showTab('jobList',this)">일감 관리</div>
+    <div class="tab" onclick="showTab('driverList',this)">기사 승인</div>
   </div>
-
   <div class="content">
-
-    <!-- 대시보드 -->
     <div id="tab-dashboard">
       <div class="stat-row">
         <div class="stat"><div class="stat-num" id="statJobs">-</div><div class="stat-label">진행 중 일감</div></div>
         <div class="stat"><div class="stat-num" id="statDrivers">-</div><div class="stat-label">승인 대기 기사</div></div>
       </div>
     </div>
-
-    <!-- 일감 등록 -->
     <div id="tab-jobReg" class="hidden">
       <div class="card">
         <div class="card-title">새 일감 등록</div>
-        <label>날짜</label>
-        <input type="date" id="jobDate">
-        <label>지역</label>
-        <input type="text" id="jobRegion" placeholder="예) 서울 송파구">
+        <label>날짜</label><input type="date" id="jobDate">
+        <label>지역</label><input type="text" id="jobRegion" placeholder="예) 서울 송파구">
         <label>장비 종류</label>
-        <select id="jobEquip">
-          <option value="스카이차">스카이차</option>
-          <option value="사다리차">사다리차</option>
-        </select>
-        <label>작업 내용</label>
-        <textarea id="jobDesc" placeholder="작업 상세 내용 입력"></textarea>
-        <label>금액 (원)</label>
-        <input type="number" id="jobAmount" placeholder="예) 400000">
-        <label>수수료 (원)</label>
-        <input type="number" id="jobFee" placeholder="예) 20000">
-        <button class="btn btn-primary" style="margin-top:16px" onclick="registerJob()">등록하기</button>
+        <select id="jobEquip"><option value="스카이차">스카이차</option><option value="사다리차">사다리차</option></select>
+        <label>작업 내용</label><textarea id="jobDesc" placeholder="작업 상세 내용"></textarea>
+        <label>금액 (원)</label><input type="number" id="jobAmount" placeholder="예) 400000">
+        <label>수수료 (원)</label><input type="number" id="jobFee" placeholder="예) 20000">
+        <button class="btn btn-primary" onclick="registerJob()">등록하기</button>
         <div id="jobMsg" class="msg"></div>
       </div>
     </div>
-
-    <!-- 일감 관리 -->
-    <div id="tab-jobList" class="hidden">
-      <div id="jobCards"></div>
-    </div>
-
-    <!-- 기사 승인 -->
-    <div id="tab-driverList" class="hidden">
-      <div id="driverCards"></div>
-    </div>
-
+    <div id="tab-jobList" class="hidden"><div id="jobCards"></div></div>
+    <div id="tab-driverList" class="hidden"><div id="driverCards"></div></div>
   </div>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const supabase = createClient(
-    'https://drdfuhploozvoltbrhfd.supabase.co',
-    'sb_publishable_uN7pNcvubiGTCLM223ggIQ_ggnpXLv9'
-  )
+const sb = createClient(
+  'https://drdfuhploozvoltbrhfd.supabase.co',
+  'sb_publishable_uN7pNcvubiGTCLM223ggIQ_ggnpXLv9'
+)
 
-  if (localStorage.getItem('admin')) showMain()
+function showMain() {
+  document.getElementById('loginWrap').classList.add('hidden')
+  document.getElementById('mainWrap').classList.remove('hidden')
+  loadDashboard()
+}
 
-  window.adminLogin = async () => {
-    const id = document.getElementById('adminId').value.trim()
-    const pw = document.getElementById('adminPw').value
-    const msg = document.getElementById('loginMsg')
-    msg.textContent = ''
-    const { data, error } = await supabase
-      .from('admins').select('*').eq('username', id).eq('password_hash', pw).maybeSingle()
-    if (error || !data) { msg.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.'; return }
-    localStorage.setItem('admin', JSON.stringify(data))
-    showMain()
+if (localStorage.getItem('smartsky_admin')) showMain()
+
+window.adminLogin = async () => {
+  const id = document.getElementById('adminId').value.trim()
+  const pw = document.getElementById('adminPw').value
+  const msg = document.getElementById('loginMsg')
+  msg.textContent = ''
+  const { data, error } = await sb.from('admins').select('*').eq('username', id).eq('password_hash', pw).maybeSingle()
+  if (!data) { msg.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.'; return }
+  localStorage.setItem('smartsky_admin', JSON.stringify(data))
+  showMain()
+}
+
+window.adminLogout = () => { localStorage.removeItem('smartsky_admin'); location.reload() }
+
+window.showTab = (tab, el) => {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'))
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+  document.getElementById('tab-' + tab).classList.remove('hidden')
+  el.classList.add('active')
+  if (tab === 'jobList') loadJobs()
+  if (tab === 'driverList') loadDrivers()
+  if (tab === 'dashboard') loadDashboard()
+}
+
+async function loadDashboard() {
+  const [{ count: jc }, { count: dc }] = await Promise.all([
+    sb.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'open'),
+    sb.from('drivers').select('*', { count: 'exact', head: true }).eq('status', 'pending')
+  ])
+  document.getElementById('statJobs').textContent = jc ?? 0
+  document.getElementById('statDrivers').textContent = dc ?? 0
+}
+
+window.registerJob = async () => {
+  const msg = document.getElementById('jobMsg')
+  msg.textContent = ''
+  const body = {
+    work_date: document.getElementById('jobDate').value,
+    region: document.getElementById('jobRegion').value.trim(),
+    equipment_type: document.getElementById('jobEquip').value,
+    description: document.getElementById('jobDesc').value.trim(),
+    amount: parseInt(document.getElementById('jobAmount').value),
+    fee: parseInt(document.getElementById('jobFee').value),
   }
+  if (!body.work_date || !body.region || !body.amount || !body.fee) { msg.textContent = '필수 항목을 모두 입력해주세요.'; return }
+  const { error } = await sb.from('jobs').insert(body)
+  if (error) { msg.textContent = '등록 중 오류가 발생했습니다.'; return }
+  msg.className = 'msg success'
+  msg.textContent = '일감이 등록되었습니다!'
+  setTimeout(() => { msg.textContent = '' }, 2000)
+}
 
-  window.adminLogout = () => { localStorage.removeItem('admin'); location.reload() }
-
-  function showMain() {
-    document.getElementById('loginWrap').classList.add('hidden')
-    document.getElementById('mainWrap').classList.remove('hidden')
-    loadDashboard()
-  }
-
-  window.showTab = (tab, el) => {
-    document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'))
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
-    document.getElementById('tab-' + tab).classList.remove('hidden')
-    el.classList.add('active')
-    if (tab === 'jobList') loadJobs()
-    if (tab === 'driverList') loadDrivers()
-    if (tab === 'dashboard') loadDashboard()
-  }
-
-  async function loadDashboard() {
-    const [{ count: jc }, { count: dc }] = await Promise.all([
-      supabase.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'open'),
-      supabase.from('drivers').select('*', { count: 'exact', head: true }).eq('status', 'pending')
-    ])
-    document.getElementById('statJobs').textContent = jc ?? 0
-    document.getElementById('statDrivers').textContent = dc ?? 0
-  }
-
-  window.registerJob = async () => {
-    const msg = document.getElementById('jobMsg')
-    const body = {
-      work_date:      document.getElementById('jobDate').value,
-      region:         document.getElementById('jobRegion').value.trim(),
-      equipment_type: document.getElementById('jobEquip').value,
-      description:    document.getElementById('jobDesc').value.trim(),
-      amount:         parseInt(document.getElementById('jobAmount').value),
-      fee:            parseInt(document.getElementById('jobFee').value),
-    }
-    if (!body.work_date || !body.region || !body.amount || !body.fee) {
-      msg.textContent = '필수 항목을 모두 입력해주세요.'; return
-    }
-    const { error } = await supabase.from('jobs').insert(body)
-    if (error) { msg.textContent = '등록 중 오류가 발생했습니다.'; return }
-    msg.className = 'msg success'
-    msg.textContent = '일감이 등록되었습니다!'
-    setTimeout(() => { msg.textContent = '' }, 2000)
-  }
-
-  async function loadJobs() {
-    const { data: jobs } = await supabase.from('jobs').select('*').order('work_date', { ascending: false })
-    const { data: apps } = await supabase.from('applications').select('job_id')
-    const appCounts = {}
-    apps?.forEach(a => { appCounts[a.job_id] = (appCounts[a.job_id] || 0) + 1 })
-
-    document.getElementById('jobCards').innerHTML = (jobs || []).map(j => `
-      <div class="card">
-        <div class="row">
-          <div>
-            <div class="card-title">${j.equipment_type} — ${j.region}</div>
-            <div class="card-sub">${j.work_date} · ${j.amount.toLocaleString()}원 · 수수료 ${j.fee.toLocaleString()}원</div>
-          </div>
-          <span class="badge badge-${j.status === 'open' ? 'open' : 'rejected'}">${j.status === 'open' ? '모집 중' : '마감'}</span>
+async function loadJobs() {
+  const { data: jobs } = await sb.from('jobs').select('*').order('work_date', { ascending: false })
+  const { data: apps } = await sb.from('applications').select('job_id')
+  const appCounts = {}
+  apps?.forEach(a => { appCounts[a.job_id] = (appCounts[a.job_id] || 0) + 1 })
+  document.getElementById('jobCards').innerHTML = (jobs || []).map(j => `
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="card-title">${j.equipment_type} — ${j.region}</div>
+          <div class="card-sub">${j.work_date} · ${j.amount.toLocaleString()}원 · 수수료 ${j.fee.toLocaleString()}원</div>
         </div>
-        <div class="row" style="margin-top:10px">
-          <span style="font-size:13px;color:#888">신청자 ${appCounts[j.id] || 0}명</span>
-          <div class="btn-row">
-            <button class="btn btn-success btn-sm" onclick="viewApps('${j.id}', '${j.equipment_type} ${j.region}')">신청자 보기</button>
-            <button class="btn btn-danger btn-sm" onclick="closeJob('${j.id}', this)">${j.status === 'open' ? '마감' : '재오픈'}</button>
-          </div>
+        <span class="badge badge-${j.status === 'open' ? 'open' : 'rejected'}">${j.status === 'open' ? '모집 중' : '마감'}</span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <span style="font-size:13px;color:#888">신청자 ${appCounts[j.id] || 0}명</span>
+        <div class="btn-row">
+          <button class="btn btn-success btn-sm" onclick="viewApps('${j.id}')">신청자 보기</button>
+          <button class="btn btn-danger btn-sm" onclick="closeJob('${j.id}', this)">${j.status === 'open' ? '마감' : '재오픈'}</button>
         </div>
-        <div id="apps-${j.id}" class="hidden" style="margin-top:12px;border-top:1px solid #e5e7eb;padding-top:12px"></div>
-      </div>`).join('')
-  }
+      </div>
+      <div id="apps-${j.id}" class="hidden" style="margin-top:12px;border-top:1px solid #e5e7eb;padding-top:12px"></div>
+    </div>`).join('')
+}
 
-  window.viewApps = async (jobId, title) => {
-    const el = document.getElementById('apps-' + jobId)
-    el.classList.toggle('hidden')
-    if (!el.classList.contains('hidden') && !el.dataset.loaded) {
-      const { data } = await supabase
-        .from('applications')
-        .select('*, drivers(name, phone, equipment_type)')
-        .eq('job_id', jobId)
-      el.dataset.loaded = '1'
-      if (!data?.length) { el.innerHTML = '<div style="font-size:13px;color:#888">신청자 없음</div>'; return }
-      el.innerHTML = data.map(a => `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9">
-          <div>
-            <div style="font-size:14px;font-weight:500">${a.drivers.name}</div>
-            <div style="font-size:12px;color:#888">${a.drivers.phone} · ${a.drivers.equipment_type}</div>
-          </div>
-          <span class="badge badge-${a.status === 'pending' ? 'pending' : a.status === 'selected' ? 'approved' : 'rejected'}">
-            ${a.status === 'pending' ? '검토 중' : a.status === 'selected' ? '선정' : '미선정'}
-          </span>
-          ${a.status === 'pending' ? `
-          <div class="btn-row">
-            <button class="btn btn-success btn-sm" onclick="selectApp('${a.id}', '${jobId}')">선정</button>
-            <button class="btn btn-danger btn-sm" onclick="rejectApp('${a.id}')">거절</button>
-          </div>` : ''}
-        </div>`).join('')
-    }
-  }
-
-  window.selectApp = async (appId, jobId) => {
-    await supabase.from('applications').update({ status: 'selected' }).eq('id', appId)
-    await supabase.from('applications').update({ status: 'rejected' }).eq('job_id', jobId).neq('id', appId)
-    await supabase.from('jobs').update({ status: 'closed' }).eq('id', jobId)
-    loadJobs()
-  }
-
-  window.rejectApp = async (appId) => {
-    await supabase.from('applications').update({ status: 'rejected' }).eq('id', appId)
-    alert('거절 처리되었습니다.')
-  }
-
-  window.closeJob = async (jobId, btn) => {
-    const isOpen = btn.textContent === '마감'
-    await supabase.from('jobs').update({ status: isOpen ? 'closed' : 'open' }).eq('id', jobId)
-    loadJobs()
-  }
-
-  async function loadDrivers() {
-    const { data: drivers } = await supabase.from('drivers').select('*, driver_docs(*)').order('created_at', { ascending: false })
-    document.getElementById('driverCards').innerHTML = (drivers || []).map(d => `
-      <div class="card">
-        <div class="row">
-          <div>
-            <div class="card-title">${d.name}</div>
-            <div class="card-sub">${d.phone} · ${d.equipment_type}</div>
-          </div>
-          <span class="badge badge-${d.status === 'pending' ? 'pending' : d.status === 'approved' ? 'approved' : 'rejected'}">
-            ${d.status === 'pending' ? '대기' : d.status === 'approved' ? '승인' : '반려'}
-          </span>
+window.viewApps = async (jobId) => {
+  const el = document.getElementById('apps-' + jobId)
+  el.classList.toggle('hidden')
+  if (!el.classList.contains('hidden') && !el.dataset.loaded) {
+    const { data } = await sb.from('applications').select('*, drivers(name, phone, equipment_type)').eq('job_id', jobId)
+    el.dataset.loaded = '1'
+    if (!data?.length) { el.innerHTML = '<div style="font-size:13px;color:#888">신청자 없음</div>'; return }
+    el.innerHTML = data.map(a => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;flex-wrap:wrap;gap:6px">
+        <div>
+          <div style="font-size:14px;font-weight:500">${a.drivers.name}</div>
+          <div style="font-size:12px;color:#888">${a.drivers.phone} · ${a.drivers.equipment_type}</div>
         </div>
-        <div style="margin-top:10px">
-          ${(d.driver_docs || []).map(doc => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px">
-              <span>${doc.doc_type}</span>
-              <a href="${doc.file_url}" target="_blank" class="doc-link">보기</a>
-            </div>`).join('')}
-        </div>
-        ${d.status === 'pending' ? `
-        <div class="btn-row" style="margin-top:12px">
-          <button class="btn btn-success btn-sm" onclick="approveDriver('${d.id}', this)">승인</button>
-          <button class="btn btn-danger btn-sm" onclick="rejectDriver('${d.id}', this)">반려</button>
+        <span class="badge badge-${a.status === 'pending' ? 'pending' : a.status === 'selected' ? 'approved' : 'rejected'}">
+          ${a.status === 'pending' ? '검토 중' : a.status === 'selected' ? '선정' : '미선정'}
+        </span>
+        ${a.status === 'pending' ? `
+        <div class="btn-row">
+          <button class="btn btn-success btn-sm" onclick="selectApp('${a.id}','${jobId}')">선정</button>
+          <button class="btn btn-danger btn-sm" onclick="rejectApp('${a.id}')">거절</button>
         </div>` : ''}
       </div>`).join('')
   }
+}
 
-  window.approveDriver = async (id, btn) => {
-    await supabase.from('drivers').update({ status: 'approved' }).eq('id', id)
-    btn.closest('.btn-row').innerHTML = '<span class="badge badge-approved">승인 완료</span>'
-  }
+window.selectApp = async (appId, jobId) => {
+  await sb.from('applications').update({ status: 'selected' }).eq('id', appId)
+  await sb.from('applications').update({ status: 'rejected' }).eq('job_id', jobId).neq('id', appId)
+  await sb.from('jobs').update({ status: 'closed' }).eq('id', jobId)
+  loadJobs()
+}
 
-  window.rejectDriver = async (id, btn) => {
-    await supabase.from('drivers').update({ status: 'rejected' }).eq('id', id)
-    btn.closest('.btn-row').innerHTML = '<span class="badge badge-rejected">반려 처리</span>'
-  }
+window.rejectApp = async (appId) => {
+  await sb.from('applications').update({ status: 'rejected' }).eq('id', appId)
+  alert('거절 처리되었습니다.')
+}
+
+window.closeJob = async (jobId, btn) => {
+  const isOpen = btn.textContent === '마감'
+  await sb.from('jobs').update({ status: isOpen ? 'closed' : 'open' }).eq('id', jobId)
+  loadJobs()
+}
+
+async function loadDrivers() {
+  const { data: drivers } = await sb.from('drivers').select('*, driver_docs(*)').order('created_at', { ascending: false })
+  document.getElementById('driverCards').innerHTML = (drivers || []).map(d => `
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="card-title">${d.name}</div>
+          <div class="card-sub">${d.phone} · ${d.equipment_type}</div>
+        </div>
+        <span class="badge badge-${d.status === 'pending' ? 'pending' : d.status === 'approved' ? 'approved' : 'rejected'}">
+          ${d.status === 'pending' ? '대기' : d.status === 'approved' ? '승인' : '반려'}
+        </span>
+      </div>
+      <div style="margin-top:10px">
+        ${(d.driver_docs || []).map(doc => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px">
+            <span>${doc.doc_type}</span>
+            <a href="${doc.file_url}" target="_blank" class="doc-link">보기</a>
+          </div>`).join('')}
+      </div>
+      ${d.status === 'pending' ? `
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-success btn-sm" onclick="approveDriver('${d.id}', this)">승인</button>
+        <button class="btn btn-danger btn-sm" onclick="rejectDriver('${d.id}', this)">반려</button>
+      </div>` : ''}
+    </div>`).join('')
+}
+
+window.approveDriver = async (id, btn) => {
+  await sb.from('drivers').update({ status: 'approved' }).eq('id', id)
+  btn.closest('.btn-row').innerHTML = '<span class="badge badge-approved">승인 완료</span>'
+}
+
+window.rejectDriver = async (id, btn) => {
+  await sb.from('drivers').update({ status: 'rejected' }).eq('id', id)
+  btn.closest('.btn-row').innerHTML = '<span class="badge badge-rejected">반려 처리</span>'
+}
 </script>
 </body>
 </html>
