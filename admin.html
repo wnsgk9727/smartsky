@@ -125,22 +125,28 @@
 </div>
 
 <script type="module">
-  import { supabase, session } from './config.js'
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  if (session.get('admin')) showMain()
+  const supabase = createClient(
+    'https://drdfuhploozvoltbrhfd.supabase.co',
+    'sb_publishable_uN7pNcvubiGTCLM223ggIQ_ggnpXLv9'
+  )
+
+  if (localStorage.getItem('admin')) showMain()
 
   window.adminLogin = async () => {
     const id = document.getElementById('adminId').value.trim()
     const pw = document.getElementById('adminPw').value
     const msg = document.getElementById('loginMsg')
+    msg.textContent = ''
     const { data, error } = await supabase
-      .from('admins').select('*').eq('username', id).eq('password_hash', pw).single()
+      .from('admins').select('*').eq('username', id).eq('password_hash', pw).maybeSingle()
     if (error || !data) { msg.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.'; return }
-    session.set('admin', data)
+    localStorage.setItem('admin', JSON.stringify(data))
     showMain()
   }
 
-  window.adminLogout = () => { session.clear('admin'); location.reload() }
+  window.adminLogout = () => { localStorage.removeItem('admin'); location.reload() }
 
   function showMain() {
     document.getElementById('loginWrap').classList.add('hidden')
