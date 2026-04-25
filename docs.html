@@ -97,7 +97,7 @@
     try {
       for (let i = 0; i < DOC_TYPES.length; i++) {
         const file = files[i]
-        const path = `${driver.id}/${DOC_TYPES[i]}_${Date.now()}`
+        const path = `docs/${Date.now()}_${i}`
 
         const { data: uploadData, error: upErr } = await supabase.storage
           .from('driver-docs')
